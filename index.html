@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>BREATHE · Tu Ruta de Piel</title>
+<style>
+:root{
+  --ice:#dfeafa;
+  --powder:#c7d8f7;
+  --navy:#071744;
+  --ink:#0a163b;
+  --ivory:#fbf8f3;
+  --line:rgba(7,23,68,.16);
+  --muted:rgba(7,23,68,.58);
+  --white:#ffffff;
+  --shadow:0 22px 60px rgba(7,23,68,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--ice);color:var(--navy)}
+body{
+  min-height:100dvh;
+  -webkit-text-size-adjust:100%;
+  font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;
+  overflow-x:hidden;
+}
+.bg{
+  position:fixed; inset:0; overflow:hidden; pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255,255,255,.85), transparent 32%),
+    radial-gradient(circle at 86% 22%, rgba(162,191,242,.40), transparent 31%),
+    linear-gradient(145deg,#eef4ff 0%,#dce8fb 48%,#bad0f7 100%);
+}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(1px);opacity:.35;
+  animation:float 11s ease-in-out infinite alternate;
+}
+.orb.one{width:260px;height:260px;right:-90px;top:18%;background:#a8c3f3}
+.orb.two{width:180px;height:180px;left:-70px;bottom:8%;background:#fff}
+@keyframes float{from{transform:translate3d(0,-8px,0) scale(1)}to{transform:translate3d(-10px,14px,0) scale(1.06)}}
+
+.app{
+  position:relative; min-height:100dvh; max-width:560px; margin:0 auto;
+  display:flex; flex-direction:column; padding:calc(24px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(34px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
+}
+header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:18px;
+  min-height:78px;
+}
+.brand{line-height:.8;letter-spacing:-.045em;font-weight:800;font-size:30px}
+.brand small{
+  display:block;font-family:Didot,"Bodoni 72","Times New Roman",serif;
+  font-size:18px;font-weight:400;letter-spacing:-.02em;line-height:1.1;
+  margin-top:9px;text-align:right;
+}
+.step-label{
+  font-size:10px;letter-spacing:.19em;text-transform:uppercase;font-weight:750;
+  color:var(--muted);padding-top:5px;text-align:right;
+}
+.progress-wrap{position:relative;height:2px;background:rgba(7,23,68,.12);margin:8px 0 34px}
+.progress{height:100%;width:0;background:var(--navy);transition:width .45s cubic-bezier(.22,.7,.24,1)}
+main{flex:1;display:flex;align-items:center}
+.screen{width:100%;animation:enter .46s cubic-bezier(.22,.7,.24,1)}
+@keyframes enter{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--muted);margin:0 0 14px}
+h1,h2,.serif{
+  font-family:Didot,"Bodoni 72","Iowan Old Style","Times New Roman",serif;
+  font-weight:400;letter-spacing:-.035em;
+}
+h1{font-size:47px;line-height:.98;margin:0 0 22px}
+h2{font-size:35px;line-height:1.06;margin:0 0 20px}
+.lead{font-size:16px;line-height:1.55;color:rgba(7,23,68,.76);margin:0 0 28px;max-width:430px}
+.micro{font-size:12px;line-height:1.5;color:var(--muted)}
+.btn{
+  width:100%;border:0;border-radius:13px;background:var(--navy);color:white;
+  padding:17px 20px;font-size:14px;letter-spacing:.04em;font-weight:760;cursor:pointer;
+  transition:transform .16s ease,opacity .16s ease;
+}
+.btn:active{transform:scale(.985)}
+.btn.secondary{background:transparent;color:var(--navy);border:1px solid var(--line)}
+.name-input{
+  width:100%;border:0;border-bottom:1.5px solid var(--navy);background:transparent;
+  padding:12px 2px;font-family:Didot,"Bodoni 72","Times New Roman",serif;
+  font-size:34px;color:var(--navy);outline:none;margin:2px 0 28px;
+}
+.options{display:grid;gap:10px;margin-top:24px}
+.option{
+  width:100%;background:rgba(255,255,255,.36);border:1px solid rgba(7,23,68,.17);
+  border-radius:13px;min-height:63px;padding:15px 48px 15px 16px;text-align:left;
+  color:var(--navy);font-size:14px;line-height:1.35;font-weight:620;cursor:pointer;
+  position:relative;transition:all .22s ease;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.option::after{content:"→";position:absolute;right:17px;top:50%;transform:translateY(-50%);font-size:19px;font-weight:400}
+.option:hover{background:rgba(255,255,255,.58);transform:translateY(-1px)}
+.option.selected{background:var(--navy);color:#fff;border-color:var(--navy);transform:scale(.99)}
+.multi .option::after{content:"";width:18px;height:18px;border:1px solid rgba(7,23,68,.38);border-radius:5px}
+.multi .option.selected::after{content:"✓";display:grid;place-items:center;border-color:#fff;font-size:12px}
+.helper{font-family:Didot,"Bodoni 72","Times New Roman",serif;font-size:18px;line-height:1.38;margin:18px 0 0;color:rgba(7,23,68,.72)}
+.transition-card{padding:34px 0;text-align:center}
+.breathe-ring{
+  width:96px;height:96px;border:1px solid rgba(7,23,68,.28);border-radius:50%;
+  margin:0 auto 26px;position:relative;display:grid;place-items:center;
+}
+.breathe-ring::before{
+  content:"";width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.42);
+  animation:breathe 2.4s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{transform:scale(.78);opacity:.45}50%{transform:scale(1.25);opacity:1}}
+.result{
+  background:rgba(255,255,255,.38);border:1px solid rgba(7,23,68,.12);
+  border-radius:22px;padding:24px 20px 20px;box-shadow:var(--shadow);backdrop-filter:blur(12px);
+}
+.route-name{font-family:Didot,"Bodoni 72","Times New Roman",serif;font-size:50px;line-height:.95;margin:2px 0 8px}
+.match{
+  margin-top:24px;padding:20px 0;border-top:1px solid rgba(7,23,68,.14);
+}
+.kicker{font-size:10px;letter-spacing:.17em;text-transform:uppercase;font-weight:850;color:var(--muted);margin-bottom:8px}
+.treatment{font-family:Didot,"Bodoni 72","Times New Roman",serif;font-size:28px;line-height:1.06}
+.reason{font-size:13px;line-height:1.55;color:rgba(7,23,68,.7);margin-top:9px}
+.route-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:16px 0}
+.route-item{
+  border:1px solid rgba(7,23,68,.13);border-radius:12px;padding:14px 15px;background:rgba(255,255,255,.28)
+}
+.route-num{font-size:10px;letter-spacing:.16em;color:var(--muted);font-weight:800;margin-bottom:5px}
+.notice{
+  margin-top:14px;padding:13px 14px;border-radius:11px;background:rgba(255,248,233,.74);
+  font-size:12px;line-height:1.5;color:rgba(7,23,68,.72)
+}
+.actions{display:grid;gap:9px;margin-top:18px}
+.footer-note{font-size:10px;color:rgba(7,23,68,.49);line-height:1.45;margin-top:16px}
+.top-back{
+  position:fixed;left:14px;bottom:14px;border:0;background:rgba(255,255,255,.55);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px;padding:9px 12px;color:var(--navy);
+  font-size:11px;cursor:pointer;display:none
+}
+
+.benefits-head{margin-bottom:22px}
+.benefit-card{
+  background:rgba(255,255,255,.42);
+  border:1px solid rgba(7,23,68,.12);
+  border-radius:18px;
+  padding:20px;
+  margin:12px 0;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.benefit-card.featured{
+  border-color:rgba(7,23,68,.28);
+  box-shadow:0 18px 50px rgba(7,23,68,.08);
+}
+.benefit-label{
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:800;color:var(--muted);margin-bottom:7px
+}
+.benefit-title{
+  font-family:Didot,"Bodoni 72","Times New Roman",serif;
+  font-size:27px;line-height:1.05;margin-bottom:8px
+}
+.benefit-copy{font-size:13px;line-height:1.5;color:rgba(7,23,68,.72)}
+.courtesy{
+  margin:15px 0 14px;padding:11px 12px;border-radius:10px;
+  background:rgba(199,216,247,.42);font-size:12px;line-height:1.4
+}
+.price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-top:14px}
+.regular{font-size:12px;color:var(--muted)}
+.regular s{font-size:15px}
+.event-price{font-family:Didot,"Bodoni 72","Times New Roman",serif;font-size:35px;line-height:1}
+.saving{font-size:11px;font-weight:800;letter-spacing:.05em;margin-top:4px;color:var(--navy)}
+.benefits-end{
+  margin:24px 0 8px;padding:22px 18px;text-align:center;border-top:1px solid rgba(7,23,68,.12)
+}
+.loading-inline{opacity:.75;pointer-events:none}
+
+@media(min-width:700px){
+  .app{padding-top:40px}
+  h1{font-size:58px}
+  h2{font-size:40px}
+}
+</style>
+</head>
+<body>
+<div class="bg"><span class="orb one"></span><span class="orb two"></span></div>
+<div class="app">
+  <header>
+    <div class="brand">BREATHE<small>By Circadia</small></div>
+    <div class="step-label" id="stepLabel">TU RUTA DE PIEL</div>
+  </header>
+  <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+  <main id="main"></main>
+</div>
+<button class="top-back" id="backBtn">← Volver</button>
+
+<script>
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycby9CWg2-Vqb5HLady-L1LCYPCa7YKFMfCYzmVPPfMC33U9Hvv9QLahnHNjIap7wQ8WY/exec";
+const T = ["MC","LAC","DF","AB","SW","OX","CALM","DREAM"];
+const scores = Object.fromEntries(T.map(k=>[k,0]));
+const answers = {};
+let name = "";
+let current = -2;
+let safetyFlags = [];
+let ready = "";
+let sunAlert = false;
+let approxDarkSkin = false;
+
+const routeMeta = {
+ MC:{route:"Luz", title:"MandeliClear Peel", reason:"Enfocado en manchas, melasma, fotodaño y marcas post-acné."},
+ LAC:{route:"Hidratación", title:"Lactic Acid Peel", reason:"Exfolia e hidrata con una experiencia suave y sin tiempo de recuperación."},
+ DF:{route:"Piel Limpia", title:"DermaFrost Peel", reason:"Pensado para acné grados I–II, grasa y piel engrosada."},
+ AB:{route:"Piel Lisa", title:"Alpha/Beta Peel", reason:"Ideal cuando predominan congestión, poros, textura y grasa."},
+ SW:{route:"Firmeza", title:"SWiCH", reason:"Renovación enfocada en firmeza, fatiga y signos de edad sin descamación."},
+ OX:{route:"Oxígeno", title:"Oxygen Rx", reason:"Ayuda con opacidad, acné, rojez y luminosidad sin tiempo de recuperación."},
+ CALM:{route:"Calma", title:"Calming Facial", reason:"Prioriza bajar sensibilidad, rojez e inflamación antes de avanzar."},
+ DREAM:{route:"Descanso", title:"Dream Facial", reason:"Una experiencia restauradora para piel cansada, deshidratada y ligada al estrés."}
+};
+
+const Q = [
+ {section:"01 · TU PIEL", key:"concern", q:"Cuando te mirás al espejo por la mañana, ¿qué es lo primero que notás?", opts:[
+  ["Manchas o diferencias de tono",{MC:4,LAC:1,SW:1}],
+  ["Mi piel se ve apagada o cansada",{OX:3,DREAM:2,LAC:2}],
+  ["Granitos o brotes",{DF:4,OX:1,CALM:1}],
+  ["Poros o textura irregular",{AB:4,LAC:1}],
+  ["Líneas o pérdida de firmeza",{SW:4,LAC:1}],
+  ["Rojeces o irritación",{CALM:4,OX:3}],
+  ["Sequedad o falta de confort",{LAC:4,DREAM:2,CALM:1}]
+ ]},
+ {section:"01 · TU PIEL", key:"change", q:"Si comparás tu piel con la de hace unos años, ¿qué sentís que perdió?", opts:[
+  ["Su luz natural",{LAC:2,OX:2,DREAM:1}],
+  ["Un tono parejo",{MC:3,LAC:1}],
+  ["Firmeza",{SW:3}],
+  ["Suavidad",{AB:2,LAC:2}],
+  ["Calma",{CALM:4,OX:1}],
+  ["No siento un cambio claro",{}]
+ ]},
+ {section:"01 · TU PIEL", key:"day", q:"Al final del día, tu piel suele sentirse…", opts:[
+  ["Seca o tirante",{LAC:3,DREAM:2,CALM:1}],
+  ["Con brillo sobre todo en frente, nariz y mentón",{AB:3,DF:1}],
+  ["Con brillo en casi todo el rostro",{DF:3,AB:2}],
+  ["Bastante equilibrada",{}]
+ ]},
+ {section:"01 · TU PIEL", key:"acne", q:"¿Los granitos son parte de tu historia?", opts:[
+  ["Nunca o casi nunca",{}],
+  ["Antes sí; ahora me quedaron marcas",{MC:3,LAC:1}],
+  ["Vienen y van",{DF:2,AB:1,OX:1}],
+  ["Son frecuentes, inflamados o dolorosos",{DF:4,CALM:1,OX:1}]
+ ]},
+ {section:"01 · TU PIEL", key:"sensitivity", q:"Cuando probás un producto nuevo, ¿cómo suele reaccionar tu piel?", opts:[
+  ["Normalmente no pasa nada",{}],
+  ["A veces pica o se enrojece un poco",{OX:1,CALM:1}],
+  ["Se irrita, arde o enrojece con facilidad",{CALM:5,OX:2,MC:-4,DF:-4,AB:-2,LAC:-1}]
+ ]},
+ {section:"02 · CÓMO RESPONDE", key:"sun", q:"Cuando te exponés al sol sin protector, ¿qué pasa primero?", opts:[
+  ["Me quemo con facilidad y quedo roja",{}],
+  ["Me quemo un poco y después me bronceo",{}],
+  ["Me bronceo con facilidad y las manchas aparecen rápido",{MC:2,LAC:1}, "dark"],
+  ["Mi piel es morena y cualquier granito o irritación puede dejarme una mancha",{MC:3,LAC:1,DF:-4}, "dark"]
+ ]},
+ {section:"02 · CÓMO RESPONDE", key:"life", q:"En estas semanas, ¿cómo describirías tu descanso y tu nivel de estrés?", opts:[
+  ["Duermo bien y me siento bastante descansada",{DREAM:1}],
+  ["Duermo menos de lo que quisiera",{DREAM:2,OX:1}],
+  ["Me cuesta dormir o vivo con bastante estrés",{DREAM:4,OX:1,SW:1}]
+ ]},
+ {section:"03 · LO QUE BUSCÁS", key:"downtime", q:"Después de un tratamiento, ¿qué tan cómoda estás con descamación visible?", opts:[
+  ["Puedo pelarme unos días si el resultado lo vale",{MC:2,DF:1}],
+  ["Prefiero algo suave",{LAC:2,AB:2,OX:1,DREAM:1}],
+  ["Necesito verme bien siempre",{SW:3,OX:2,CALM:2,DREAM:2,LAC:1,AB:1,MC:-3,DF:-2}]
+ ]},
+ {section:"03 · LO QUE BUSCÁS", key:"goal", q:"Imaginá que en 8 semanas te mirás al espejo y sonreís. ¿Qué ves?", opts:[
+  ["Una piel pareja y luminosa",{MC:5,LAC:2,OX:1}],
+  ["Una piel más limpia y con menos brotes",{DF:5,AB:2,OX:1}],
+  ["Una piel más firme y descansada",{SW:5,DREAM:2}],
+  ["Una piel tranquila, sin rojeces",{CALM:5,OX:2}],
+  ["Una piel suave e hidratada",{LAC:5,DREAM:2}],
+  ["Una piel con poros y textura más uniformes",{AB:5,LAC:1}]
+ ]},
+ {section:"03 · LO QUE BUSCÁS", key:"spf", q:"Tu protector solar es…", opts:[
+  ["Parte de mi rutina diaria",{}],
+  ["Más de fines de semana que de todos los días",{}],
+  ["Casi un desconocido",{},"sunalert"]
+ ]}
+];
+
+const safetyOptions = [
+ ["preg","Estoy embarazada o en lactancia"],
+ ["iso","He utilizado isotretinoína / Accutane recientemente"],
+ ["asp","Tengo alergia a aspirina o salicilatos"],
+ ["ret","He usado retinoides o ácidos exfoliantes recientemente"],
+ ["herpes","Tengo herpes activo, heridas abiertas o lesiones que deben revisarse"],
+ ["barrier","Mi piel está muy irritada, extremadamente seca o con la barrera alterada"],
+ ["none","Ninguna de las anteriores"]
+];
+
+function resetScores(){
+  for(const k of T) scores[k]=0;
+  for(const q of Q){
+    const a = answers[q.key];
+    if(a==null) continue;
+    const opt=q.opts[a];
+    if(opt && opt[1]) for(const [k,v] of Object.entries(opt[1])) scores[k]+=v;
+  }
+}
+function renderWelcome(){
+ current=-2; progress.style.width="0%"; stepLabel.textContent="TU RUTA DE PIEL";
+ main.innerHTML=`<section class="screen">
+   <p class="eyebrow">Experiencia Breathe</p>
+   <h1>Descubrí lo que tu piel está pidiendo.</h1>
+   <p class="lead">Una experiencia breve para explorar qué tratamiento Circadia podría encajar mejor con tus objetivos y con la forma en que hoy se comporta tu piel.</p>
+   <button class="btn" onclick="renderName()">Quiero conocer mi piel</button>
+   <p class="micro" style="margin-top:14px">≈ 2 minutos · Recomendación orientativa</p>
+ </section>`;
+}
+function renderName(){
+ current=-1; progress.style.width="4%"; stepLabel.textContent="ANTES DE EMPEZAR";
+ main.innerHTML=`<section class="screen">
+  <p class="eyebrow">Antes de empezar</p>
+  <h2>¿Cómo te llamás?</h2>
+  <p class="lead">Queremos hablarte a vos, no a una paciente más.</p>
+  <input id="nm" class="name-input" autocomplete="name" placeholder="Tu nombre" value="${name||""}">
+  <button class="btn" onclick="saveName()">Continuar</button>
+ </section>`;
+ setTimeout(()=>document.getElementById("nm")?.focus(),200);
+}
+function saveName(){
+ const v=document.getElementById("nm").value.trim();
+ name=v||"Vos"; renderQuestion(0);
+}
+function renderQuestion(i){
+ current=i;
+ const q=Q[i];
+ stepLabel.textContent=q.section;
+ progress.style.width=((i+1)/(Q.length+3)*82+7)+"%";
+ main.innerHTML=`<section class="screen">
+   <p class="eyebrow">${q.section}</p>
+   <h2>${q.q}</h2>
+   <div class="options">
+    ${q.opts.map((o,idx)=>`<button class="option" onclick="choose(${i},${idx},this)">${o[0]}</button>`).join("")}
+   </div>
+ </section>`;
+}
+function choose(i,idx,el){
+ answers[Q[i].key]=idx;
+ const tag=Q[i].opts[idx][2];
+ if(tag==="dark") approxDarkSkin=true;
+ if(tag==="sunalert") sunAlert=true;
+ document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
+ el.classList.add("selected");
+ resetScores();
+ setTimeout(()=>{
+   if(i===4) transition("Ya empezamos a entender cómo se comporta tu piel.",()=>renderQuestion(i+1));
+   else if(i===7) transition("Ahora queremos saber qué resultado te haría sentir mejor.",()=>renderQuestion(i+1));
+   else if(i===Q.length-1) renderSafety();
+   else renderQuestion(i+1);
+ },260);
+}
+function transition(text,cb){
+ main.innerHTML=`<section class="screen transition-card">
+   <div class="breathe-ring"></div>
+   <p class="eyebrow">BREATHE</p>
+   <h2>${text}</h2>
+ </section>`;
+ setTimeout(cb,1150);
+}
+function renderSafety(){
+ current=Q.length; stepLabel.textContent="04 · SEGURIDAD"; progress.style.width="91%";
+ main.innerHTML=`<section class="screen">
+ <p class="eyebrow">04 · SEGURIDAD</p>
+ <h2>Un último paso para cuidarte.</h2>
+ <p class="lead">Marcá cualquier situación que aplique actualmente.</p>
+ <div class="options multi">
+ ${safetyOptions.map(([id,label])=>`<button class="option" data-id="${id}" onclick="toggleSafety(this,'${id}')">${label}</button>`).join("")}
+ </div>
+ <button class="btn" style="margin-top:18px" onclick="saveSafety()">Ver mi ruta</button>
+ </section>`;
+}
+function toggleSafety(el,id){
+ if(id==="none"){
+   document.querySelectorAll(".multi .option").forEach(x=>x.classList.remove("selected"));
+   el.classList.add("selected"); safetyFlags=["none"]; return;
+ }
+ document.querySelector('.multi .option[data-id="none"]')?.classList.remove("selected");
+ safetyFlags=safetyFlags.filter(x=>x!=="none");
+ el.classList.toggle("selected");
+ if(el.classList.contains("selected")) safetyFlags.push(id);
+ else safetyFlags=safetyFlags.filter(x=>x!==id);
+}
+function saveSafety(){
+ if(!safetyFlags.length) safetyFlags=["none"];
+ transition("Respirá. Estamos creando tu Ruta Breathe…",renderResult);
+}
+
+function exclusions(){
+ const ex=new Set();
+ const f=new Set(safetyFlags);
+ if(f.has("preg")) ["MC","LAC","DF","AB"].forEach(x=>ex.add(x));
+ if(f.has("iso")) ["MC","LAC","DF","AB"].forEach(x=>ex.add(x));
+ if(f.has("asp")) ["MC","DF","AB","SW"].forEach(x=>ex.add(x));
+ if(f.has("ret")) ["MC","LAC","DF","AB"].forEach(x=>ex.add(x));
+ if(f.has("herpes")) ["MC","LAC","DF","AB"].forEach(x=>ex.add(x));
+ if(f.has("barrier")) ["MC","LAC","DF","AB"].forEach(x=>ex.add(x));
+ if(approxDarkSkin) ex.add("DF");
+ return ex;
+}
+function pickResult(){
+ resetScores();
+ const ex=exclusions();
+ const ordered=T.filter(x=>!ex.has(x)).sort((a,b)=>scores[b]-scores[a]);
+ let principal=ordered[0]||"CALM";
+
+ if(scores.CALM>=7 && !ex.has("CALM")) principal="CALM";
+ if((scores[principal]||0)<4) principal="OX";
+
+ let secondary=[];
+ if(principal==="MC"){
+   if(!ex.has("LAC")) secondary.push({code:"LAC",label:"Preparación"});
+   secondary.push({code:"OX",label:"Complemento"});
+ }else if(principal==="CALM"){
+   secondary.push({code:"OX",label:"Incluido en el protocolo"});
+   const nxt=ordered.find(x=>!["CALM","OX"].includes(x));
+   if(nxt) secondary.push({code:nxt,label:"Fase 2 · a valorar"});
+ }else{
+   if(principal!=="OX") secondary.push({code:"OX",label:"Complemento"});
+   const nxt=ordered.find(x=>x!==principal && x!=="OX");
+   if(nxt) secondary.push({code:nxt,label:"Alternativa secundaria"});
+   if(principal==="OX"){
+     const n1=ordered.find(x=>x!=="OX");
+     const n2=ordered.find(x=>x!=="OX" && x!==n1);
+     secondary=[];
+     if(n1) secondary.push({code:n1,label:"Complemento"});
+     if(n2) secondary.push({code:n2,label:"Otra opción"});
+   }
+ }
+ return {principal,secondary:secondary.slice(0,2),ex};
+}
+function renderResult(){
+ current=Q.length+1; progress.style.width="100%"; stepLabel.textContent="TU RUTA BREATHE";
+ const {principal,secondary,ex}=pickResult();
+ const p=routeMeta[principal];
+ const caution = safetyFlags.some(x=>x!=="none");
+ const spf = sunAlert ? `<div class="notice"><strong>Primer paso:</strong> reforzar la fotoprotección diaria antes de avanzar con una ruta para manchas o renovación.</div>`:"";
+ const safety = caution ? `<div class="notice"><strong>Tu piel además merece una valoración presencial.</strong> Marcaste una condición que puede cambiar la indicación o el momento ideal del tratamiento.</div>`:"";
+ const secHTML=secondary.map((s,i)=>{
+   const m=routeMeta[s.code];
+   return `<div class="route-item"><div class="route-num">0${i+2} · ${s.label}</div><div class="treatment" style="font-size:22px">${m.title}</div><div class="reason">${m.reason}</div></div>`;
+ }).join("");
+ main.innerHTML=`<section class="screen">
+  <div class="result">
+   <p class="eyebrow">Tu Ruta Breathe</p>
+   <div class="route-name">${p.route}</div>
+   <p class="lead" style="margin-bottom:0">${name}, según tus respuestas esta es la experiencia que mejor conversa con lo que tu piel necesita hoy.</p>
+   <div class="match">
+    <div class="kicker">01 · Tu match principal</div>
+    <div class="treatment">${p.title}</div>
+    <div class="reason">${p.reason}</div>
+   </div>
+   <div class="route-grid">${secHTML}</div>
+   ${spf}${safety}
+   <div class="actions">
+    <button class="btn" onclick="openBenefits(this)">Quiero conocer mis beneficios exclusivos</button>
+    <button class="btn secondary" onclick="restart()">Probar otra ruta</button>
+   </div>
+   <div class="footer-note">Este test es orientativo y no sustituye una valoración profesional. Tu ruta sugerida se confirma con el equipo de Clínica Breathe.</div>
+  </div>
+ </section>`;
+}
+
+function humanAnswer(key){
+  const q = Q.find(x=>x.key===key);
+  if(!q) return "";
+  const idx = answers[key];
+  return idx == null ? "" : (q.opts[idx]?.[0] || "");
+}
+
+function payloadForClinic(){
+  const result = pickResult();
+  const principal = routeMeta[result.principal];
+  const secondaries = result.secondary.map(s=>({
+    tipo:s.label,
+    tratamiento:routeMeta[s.code]?.title || s.code,
+    code:s.code
+  }));
+
+  return {
+    nombre:name,
+    ruta:principal.route,
+    principal:principal.title,
+    preparacion: secondaries.find(x=>String(x.tipo).toLowerCase().includes("prepar"))?.tratamiento || "",
+    secundarios: secondaries,
+    complemento1: secondaries.filter(x=>!String(x.tipo).toLowerCase().includes("prepar"))[0]?.tratamiento || "",
+    complemento2: secondaries.filter(x=>!String(x.tipo).toLowerCase().includes("prepar"))[1]?.tratamiento || "",
+    vioBeneficios:true,
+    alertas:safetyFlags,
+    respuestas:{
+      concern:humanAnswer("concern"),
+      change:humanAnswer("change"),
+      day:humanAnswer("day"),
+      acne:humanAnswer("acne"),
+      sensitivity:humanAnswer("sensitivity"),
+      sun:humanAnswer("sun"),
+      life:humanAnswer("life"),
+      downtime:humanAnswer("downtime"),
+      goal:humanAnswer("goal"),
+      spf:humanAnswer("spf")
+    }
+  };
+}
+
+function submitToGoogleAppsScript(payload){
+  // Standard HTML form submission avoids CORS/fetch issues in Safari.
+  let iframe = document.getElementById("breatheSubmitFrame");
+  if(!iframe){
+    iframe = document.createElement("iframe");
+    iframe.id = "breatheSubmitFrame";
+    iframe.name = "breatheSubmitFrame";
+    iframe.style.display = "none";
+    iframe.setAttribute("aria-hidden","true");
+    document.body.appendChild(iframe);
+  }
+
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = API_ENDPOINT;
+  form.target = "breatheSubmitFrame";
+  form.style.display = "none";
+
+  const field = document.createElement("input");
+  field.type = "hidden";
+  field.name = "payload";
+  field.value = JSON.stringify(payload);
+
+  form.appendChild(field);
+  document.body.appendChild(form);
+  form.submit();
+
+  // Give the browser a moment to dispatch the request before cleanup.
+  setTimeout(()=>form.remove(), 1800);
+}
+
+function openBenefits(btn){
+  if(btn){
+    btn.textContent="Preparando tus beneficios…";
+    btn.classList.add("loading-inline");
+    btn.disabled = true;
+  }
+
+  const payload = payloadForClinic();
+
+  try{
+    submitToGoogleAppsScript(payload);
+  }catch(err){
+    console.warn("No se pudo iniciar el envío.", err);
+  }
+
+  // The guest should never get stuck waiting for the backend.
+  setTimeout(()=>renderBenefits(payload.ruta),650);
+}
+
+const offers = [
+  {
+    route:"Luz",
+    label:"Ruta Luz",
+    title:"Lactic Acid Peel + MandeliClear",
+    courtesy:"Oxygen Calming",
+    regular:540,event:400
+  },
+  {
+    route:"Oxígeno",
+    label:"Pack Oxygen",
+    title:"3 Oxygen Rx",
+    courtesy:"Lactic Acid Peel",
+    regular:480,event:350
+  },
+  {
+    route:"Piel Lisa",
+    label:"Ruta Piel Lisa",
+    title:"2 Alpha/Beta",
+    courtesy:"Dream Facial",
+    regular:330,event:230
+  },
+  {
+    route:"Piel Limpia",
+    label:"Ruta Piel Limpia",
+    title:"1 Alpha/Beta + 1 DermaFrost",
+    courtesy:"Dream Facial",
+    regular:330,event:230
+  },
+  {
+    route:"Oxígeno",
+    label:"Oxygen Rx",
+    title:"1 sesión de Oxygen Rx",
+    courtesy:"",
+    regular:120,event:100
+  },
+  {
+    route:"Firmeza",
+    label:"Ruta Firmeza",
+    title:"1 SWiCH",
+    courtesy:"Dream Facial",
+    regular:390,event:240
+  },
+  {
+    route:"Descanso",
+    label:"Dream Facial",
+    title:"1 Dream Facial",
+    courtesy:"",
+    regular:90,event:75
+  }
+];
+
+function renderOffer(o,featured=false){
+  const saving=o.regular-o.event;
+  return `
+  <article class="benefit-card ${featured?"featured":""}">
+    <div class="benefit-label">${featured?"RECOMENDADO PARA TU RUTA":o.label}</div>
+    <div class="benefit-title">${o.title}</div>
+    ${o.courtesy?`<div class="courtesy"><strong>Incluye de cortesía</strong><br>${o.courtesy}</div>`:""}
+    <div class="price-row">
+      <div>
+        <div class="regular">Precio regular <s>$${o.regular}</s></div>
+        <div class="saving">AHORRÁS $${saving}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="benefit-label" style="margin-bottom:3px">PRECIO EVENTO</div>
+        <div class="event-price">$${o.event}</div>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderBenefits(route){
+  current=Q.length+2;
+  stepLabel.textContent="BENEFICIOS EXCLUSIVOS";
+  progress.style.width="100%";
+
+  const featured = offers.find(o=>o.route===route) || offers[0];
+  const rest = offers.filter(o=>o!==featured);
+
+  main.innerHTML=`<section class="screen">
+    <div class="benefits-head">
+      <p class="eyebrow">Solo durante el evento</p>
+      <h2>Beneficios exclusivos Breathe</h2>
+      <p class="lead">Tu Ruta de Piel nos ayuda a destacar primero la experiencia que mejor conversa con tus objetivos. También podés explorar las demás opciones del evento.</p>
+    </div>
+
+    ${renderOffer(featured,true)}
+
+    <p class="eyebrow" style="margin-top:30px">Todas las experiencias</p>
+    ${rest.map(o=>renderOffer(o,false)).join("")}
+
+    <div class="benefits-end">
+      <h2 style="font-size:29px;margin-bottom:10px">¿Encontraste tu experiencia?</h2>
+      <p class="lead" style="font-size:14px;margin:0 auto;max-width:400px">
+        Nuestro equipo Breathe te espera en el área de tratamientos para ayudarte con tu compra.
+      </p>
+    </div>
+  </section>`;
+}
+
+function restart(){
+ for(const k of Object.keys(answers)) delete answers[k];
+ safetyFlags=[]; ready=""; sunAlert=false; approxDarkSkin=false; name="";
+ for(const k of T) scores[k]=0;
+ renderWelcome();
+}
+renderWelcome();
+</script>
+</body>
+</html>
